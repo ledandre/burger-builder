@@ -9,12 +9,11 @@
     display: block;
     font:inherit;
     padding: 5px;
-    margin: 80px;
+    margin: 8px;
     border: 1px solid #aa6817;
     cursor: pointer;
     outline: none;
 }
-
 
 .BuildControl button:disabled {
     background-color: #AC9980;
