@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mini-kuburger-be-deployment
+spec:
+  selector:
+    matchLabels:
+      app: mini-kuburger
+      type: back-end
+  template:
+    metadata:
+      labels:
+        app: mini-kuburger
+        type: back-end
+    spec:
+      containers:
+      - name: mini-kuburger-go-container
+        image: ledandre/mini-kuburger-backend:1.0.0
+  replicas: 1
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mini-kuburger-backend
+spec:
+  type: NodePort
+  ports:
+    -
+      targetPort: 8000
+      port: 8000
+      nodePort: 30008
+  selector:
+    app: mini-kuburger
+    type: back-end

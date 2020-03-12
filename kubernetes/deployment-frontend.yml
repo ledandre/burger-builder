@@ -1,27 +1,27 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: mini-burger-deployment
+  name: mini-kuburger-fe-deployment
 spec:
   selector:
     matchLabels:
-      app: mini-burger
+      app: mini-kuburger
       type: front-end
   template:
     metadata:
       labels:
-        app: mini-burger
+        app: mini-kuburger
         type: front-end
     spec:
       containers:
-      - name: mini-burger-react-container
-        image: ledandre/mini-burger:0.0.1
+      - name: mini-kuburger-react-container
+        image: ledandre/mini-kuburger:1.0.2
   replicas: 1
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: mini-burger-nodeport
+  name: mini-kuburger-frontend
 spec:
   type: NodePort
   ports:
@@ -30,5 +30,5 @@ spec:
       port: 3000
       nodePort: 30000
   selector:
-    app: mini-burger
+    app: mini-kuburger
     type: front-end

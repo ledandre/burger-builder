@@ -1,10 +1,13 @@
 import React, {Component} from 'react';
+import axios from 'axios';
 
 import Aux from '../../hoc/Aux/Auxilliary';
 import Burger from '../../components/Burger/Burger';
 import BuildControls from '../../components/Burger/BuildControls/BuildControls';
 import Modal from '../../components/UI/Modal/Modal';
 import OrderSummary from '../../components/Burger/OrderSummary/OrderSummary';
+import PurchasedModal from '../../components/UI/Modal/PurchasedModal';
+import PurchasedBurgers from '../../components/Burger/PurchasedBurgers/PurchasedBurguers';
 
 const INGREDIENT_PRICES = {
     salad: 0.5,
@@ -21,9 +24,11 @@ class BurgerBuilder extends Component {
             cheese: 0,
             meat: 0
         },
+        purchasedBurgers: [],
         totalPrice: 4,
         purchaseable: false,
-        purchasing: false
+        purchasing: false,
+        showPurchasedHamburgers: false
     };
 
     updatePurchaseState (ingredients) {
@@ -71,11 +76,48 @@ class BurgerBuilder extends Component {
     }
 
     purchaseCancelHandler = () => {
-        this.setState({purchasing: false});
+        this.setState({purchasing: false, showPurchasedHamburgers: false});
+    }
+
+    purchasedBurgersCloseHandler = () => {
+        this.setState({showPurchasedHamburgers: false});
     }
 
     purchaseContinueHandler = () => {
-        alert('You continued!');
+        const data = {...this.state.ingredients}
+    
+        axios.post(process.env.REACT_APP_MINI_KUBURGER_BACKEND_URL, data)
+            .then(response => {
+                alert("Compra feita com sucesso!");
+                this.setState({
+                    ingredients : {
+                        salad: 0,
+                        bacon: 0,
+                        cheese: 0,
+                        meat: 0
+                    },
+                    totalPrice: 4,
+                    purchaseable: false,
+                    purchasing: false
+                });
+            })
+            .catch(error => {
+                alert(error);
+            });
+    }
+
+    purchasedBurgersHandler = () => {
+        axios.get(process.env.REACT_APP_MINI_KUBURGER_BACKEND_URL)
+            .then(response => {
+                if (response.data !== null) {
+                    this.setState({purchasedBurgers: response.data, showPurchasedHamburgers: true});
+                } else {
+                    this.setState({showPurchasedHamburgers: true});
+                }
+            })
+            .catch(error =>{
+                alert("Falha ao obter dados do backend!");
+            });
     }
 
     render() {
@@ -95,6 +137,11 @@ class BurgerBuilder extends Component {
                         purchaseCanceled={this.purchaseCancelHandler}
                         purchaseContinued={this.purchaseContinueHandler}/>
                 </Modal>
+
+                <PurchasedModal show={this.state.showPurchasedHamburgers} modalClosed={this.purchasedBurgersCloseHandler}>
+                    <PurchasedBurgers ingredients={this.state.purchasedBurgers} />
+                </PurchasedModal>
+
                 <Burger ingredients={this.state.ingredients} />
                 <BuildControls 
                     ingredientAdded={this.addIngredientHandler}
@@ -102,7 +149,8 @@ class BurgerBuilder extends Component {
                     disabled={disabledInfo}
                     purchaseable={this.state.purchaseable} 
                     ordered={this.purchaseHandler}
-                    price={this.state.totalPrice}/>
+                    price={this.state.totalPrice}
+                    purchasedBurgers={this.purchasedBurgersHandler}/>
             </Aux>
         );
     }

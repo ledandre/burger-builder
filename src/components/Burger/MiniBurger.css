@@ -1,0 +1,30 @@
+.MiniBurger {
+    width: 40%;
+    margin: auto;
+    height: 50px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+  }
+  
+  @media (min-width: 500px) and (min-height: 400px) {
+    .MiniBurger {
+      width: 150px;
+      height: 100px;
+    }
+  }
+  
+  @media (min-width: 500px) and (min-height: 401px) {
+    .MiniBurger {
+      width: 150px;
+      height: 100px;
+    }
+  }
+  
+  @media (min-width: 1000px) and (min-height: 700px) {
+    .MiniBurger {
+      width: 100px;
+      height: 100px;
+    }
+  }
+  

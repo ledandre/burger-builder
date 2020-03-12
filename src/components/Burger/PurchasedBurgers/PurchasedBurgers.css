@@ -1,0 +1,7 @@
+.PurchasedBurgers {
+    display: flex;
+    justify-content: space-between;
+    align-items: left;
+    box-sizing: border-box;
+    overflow: scroll;
+}

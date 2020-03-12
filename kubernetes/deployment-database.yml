@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mini-kuburger-db-deployment
+spec:
+  selector:
+    matchLabels:
+      app: mini-kuburger
+      type: database
+  template:
+    metadata:
+      labels:
+        app: mini-kuburger
+        type: database
+    spec:
+      containers:
+      - name: mini-kuburger-db-container
+        image: mongo
+  replicas: 1
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongodb
+spec:
+  type: ClusterIP
+  ports:
+    -
+      targetPort: 27017
+      port: 27017
+  selector:
+    app: mini-kuburger
+    type: database
